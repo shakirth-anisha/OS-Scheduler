@@ -4,15 +4,41 @@ const Form = ({ onSubmit }) => {
   const [algorithm, setAlgorithm] = useState('');
   const [arrivalTimes, setArrivalTimes] = useState('');
   const [burstTimes, setBurstTimes] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const validateInputs = () => {
+    const arrivalArray = arrivalTimes.split(' ').map(Number);
+    const burstArray = burstTimes.split(' ').map(Number);
+
+    // Error Handling
+    if (burstArray.some((bt) => bt <= 0)) {
+      setErrorMessage('Burst times cannot be zero or negative.');
+      return false;
+    }
+    if (arrivalArray.length !== burstArray.length) {
+      setErrorMessage('The number of Arrival times and Burst times must be the same.');
+      return false;
+    }
+
+    setErrorMessage('');
+    return true;
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit({ algorithm, arrivalTimes, burstTimes });
+
+    if (validateInputs()) {
+      onSubmit({
+        algorithm,
+        arrivalTimes,
+        burstTimes,
+      });
+    }
   };
 
   return (
     <div className="bg-gray-800 p-8 rounded-lg shadow-xl w-full md:w-1/3 space-y-6">
-      <h2 className="text-3xl font-extrabold text-white text-center">Input</h2>
+      <h2 className="text-3xl font-extrabold text-indigo-400 text-center">Input</h2>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="relative">
           <label className="block text-lg font-medium text-white">Algorithm</label>
@@ -49,6 +75,10 @@ const Form = ({ onSubmit }) => {
             onChange={(e) => setBurstTimes(e.target.value)}
           />
         </div>
+
+        {errorMessage && (
+          <p className="text-red-500 text-center">{errorMessage}</p>
+        )}
 
         <button
           type="submit"
