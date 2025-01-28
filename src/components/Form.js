@@ -58,7 +58,7 @@ const Form = ({ onSubmit }) => {
           <label className="block text-lg font-medium text-white">Arrival Times</label>
           <input
             type="text"
-            placeholder="e.g. 0 2 4 6 8"
+            placeholder="e.g. 0 7 0 5"
             className="w-full mt-2 p-4 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-lg bg-gray-700 text-white"
             value={arrivalTimes}
             onChange={(e) => setArrivalTimes(e.target.value)}
@@ -69,7 +69,7 @@ const Form = ({ onSubmit }) => {
           <label className="block text-lg font-medium text-white">Burst Times</label>
           <input
             type="text"
-            placeholder="e.g. 2 4 6 8 10"
+            placeholder="e.g. 2 1 1 9"
             className="w-full mt-2 p-4 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-lg bg-gray-700 text-white"
             value={burstTimes}
             onChange={(e) => setBurstTimes(e.target.value)}

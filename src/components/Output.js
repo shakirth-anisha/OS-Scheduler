@@ -1,9 +1,9 @@
 import React from 'react';
-import FCFS from '../utils/FCFS'; 
+import FCFS from '../utils/FCFS';
 
 const Output = ({ result }) => {
   const processScheduling = () => {
-    if (!result) return {}; 
+    if (!result) return {};
     const { arrivalTimes, burstTimes } = result;
     return FCFS(arrivalTimes, burstTimes);
   };
@@ -17,31 +17,41 @@ const Output = ({ result }) => {
     avgWT = 0,
   } = resultData;
 
+  const maxBurstTime = Math.max(
+    ...processes.map((p) => p.bt),
+    ganttChart.filter((p) => p === 'Idle').length
+  );
+
   return (
     <div className="bg-gray-800 p-8 rounded-lg shadow-xl w-full md:w-2/3 mx-auto">
       <h2 className="text-3xl font-extrabold text-indigo-400 text-center mb-6">Output</h2>
       <div className="space-y-6">
         {result ? (
           <div className="space-y-4">
-            {/* Gantt Chart */}
             <div className="gantt-chart-container mt-6">
               <h3 className="text-xl text-white text-center mb-4">Gantt Chart</h3>
               <div className="gantt-chart flex items-center justify-start space-x-2 p-4 bg-gray-700 rounded-lg shadow-lg">
-                {ganttChart.map((process, index) => (
-                  <div
-                    key={index}
-                    className={`gantt-bar p-2 text-center text-white rounded-lg ${
-                      process === 'Idle' ? 'bg-gray-500' : 'bg-indigo-500'
-                    }`}
-                    style={{ width: `${process === 'Idle' ? 50 : 60}px` }}
-                  >
-                    {process !== 'Idle' && `P${process.slice(1)}`}
-                  </div>
-                ))}
+                {ganttChart.map((process, index) => {
+                  const processWidth =
+                    process !== 'Idle'
+                      ? (processes.find((p) => p.pid === process).bt / maxBurstTime) * 600
+                      : (1 / maxBurstTime) * 600;
+
+                  return (
+                    <div
+                      key={index}
+                      className={`gantt-bar p-2 text-center text-white rounded-lg ${
+                        process === 'Idle' ? 'bg-gray-500' : 'bg-indigo-500'
+                      }`}
+                      style={{ width: `${processWidth}px` }}
+                    >
+                      {process !== 'Idle' && `P${process.slice(1)}`}
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
-            {/* Ready Queue Chart */}
             <div className="ready-queue-container mt-6">
               <h3 className="text-xl text-white text-center mb-4">Ready Queue</h3>
               <div className="ready-queue flex items-center justify-start space-x-2 p-4 bg-gray-700 rounded-lg shadow-lg">
@@ -57,7 +67,6 @@ const Output = ({ result }) => {
               </div>
             </div>
 
-            {/* Scheduling Table */}
             <div className="mt-6 p-4 border-2 border-gray-600 rounded-lg">
               <h3 className="text-center text-xl text-white">Scheduling Table</h3>
               <table className="min-w-full table-auto mt-4 text-white border-collapse border-gray-100">
@@ -85,7 +94,9 @@ const Output = ({ result }) => {
                 </tbody>
                 <tfoot>
                   <tr className="bg-gray-700 text-white">
-                    <td className="px-12 py-3 border-l border-gray-600 text-right" colSpan="4">Average</td>
+                    <td className="px-12 py-3 border-l border-gray-600 text-right" colSpan="4">
+                      Average
+                    </td>
                     <td className="px-6 py-3 border-l border-gray-600">{avgTAT.toFixed(2)}</td>
                     <td className="px-6 py-3 border-l border-gray-600">{avgWT.toFixed(2)}</td>
                   </tr>
