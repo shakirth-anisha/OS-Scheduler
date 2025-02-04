@@ -1,11 +1,25 @@
 import React from 'react';
 import FCFS from '../utils/FCFS';
+import SJF from '../utils/SJF';  
+import STRF from '../utils/STRF'; 
+import RR from '../utils/RR';
 
 const Output = ({ result }) => {
   const processScheduling = () => {
     if (!result) return {};
-    const { arrivalTimes, burstTimes } = result;
-    return FCFS(arrivalTimes, burstTimes);
+    const {algorithm, arrivalTimes, burstTimes } = result;
+    switch (algorithm) {
+      case 'FCFS':
+        return FCFS(arrivalTimes, burstTimes);
+      case 'SJF':
+        return SJF(arrivalTimes, burstTimes);
+      case 'STRF':
+        return STRF(arrivalTimes, burstTimes);
+      case 'RR':
+        return RR(arrivalTimes, burstTimes);
+      default:
+        return {};
+    }
   };
 
   const resultData = processScheduling();

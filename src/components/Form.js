@@ -10,7 +10,6 @@ const Form = ({ onSubmit }) => {
     const arrivalArray = arrivalTimes.split(' ').map(Number);
     const burstArray = burstTimes.split(' ').map(Number);
 
-    // Error Handling
     if (burstArray.some((bt) => bt <= 0)) {
       setErrorMessage('Burst times cannot be zero or negative.');
       return false;
@@ -26,14 +25,17 @@ const Form = ({ onSubmit }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    if (validateInputs()) {
-      onSubmit({
-        algorithm,
-        arrivalTimes,
-        burstTimes,
-      });
-    }
+    
+    setTimeout(() => {
+      console.log("Selected Algorithm:", algorithm);
+      if (validateInputs()) {
+        onSubmit({
+          algorithm,
+          arrivalTimes,
+          burstTimes,
+        });
+      }
+    }, 0);
   };
 
   return (
@@ -45,12 +47,16 @@ const Form = ({ onSubmit }) => {
           <select
             className="w-full mt-2 p-4 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-lg appearance-none bg-gray-700 text-white"
             value={algorithm}
-            onChange={(e) => setAlgorithm(e.target.value)}
+            onChange={(e) => {
+              setAlgorithm(e.target.value);
+              console.log("Algorithm changed to:", e.target.value);
+            }}
           >
-            <option value="FCFS">First Come First Serve, FCFS</option>
-            <option value="SJF">Shortest Job First, SJF</option>
-            <option value="STRF">Shortest Time Remaining First, STRF</option>
-            <option value="RR">Round Robin, RR</option>
+            <option value="">Select an Algorithm</option>
+            <option value="FCFS">First Come First Serve</option>
+            <option value="SJF">Shortest Job First</option>
+            <option value="STRF">Shortest Time Remaining First</option>
+            <option value="RR">Round Robin</option>
           </select>
         </div>
 
@@ -76,9 +82,7 @@ const Form = ({ onSubmit }) => {
           />
         </div>
 
-        {errorMessage && (
-          <p className="text-red-500 text-center">{errorMessage}</p>
-        )}
+        {errorMessage && <p className="text-red-500 text-center">{errorMessage}</p>}
 
         <button
           type="submit"
